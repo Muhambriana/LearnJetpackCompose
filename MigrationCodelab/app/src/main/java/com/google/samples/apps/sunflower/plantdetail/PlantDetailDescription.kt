@@ -16,31 +16,54 @@
 
 package com.google.samples.apps.sunflower.plantdetail
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.samples.apps.sunflower.R
+import com.google.samples.apps.sunflower.data.Plant
+import com.google.samples.apps.sunflower.viewmodels.PlantDetailViewModel
 
 @Composable
-fun PlantDetailDescription() {
-    Surface {
-        Text("Hello Compose")
+fun PlantDetailDescription(
+    plantDetailViewModel: PlantDetailViewModel
+) {
+    val isDark = isSystemInDarkTheme()
+    MaterialTheme(
+        colorScheme = if (isDark) darkColorScheme() else lightColorScheme()
+    ) {
+        val plant by plantDetailViewModel.plant.observeAsState()
+
+        plant?.let {
+            PlantDetailContent(it)
+        }
     }
+}
+
+@Composable
+fun PlantDetailContent(plant: Plant) {
+    PlantName(plant.name)
 }
 
 @Composable
 private fun PlantName(name: String) {
     Text(
         text = name,
-        style = MaterialTheme.typography.headlineSmall,
+        style = MaterialTheme.typography.headlineSmall.copy(
+            color = MaterialTheme.colorScheme.onBackground
+        ),
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(R.dimen.margin_small))
@@ -51,7 +74,11 @@ private fun PlantName(name: String) {
 @Preview(showBackground = true)
 @Composable
 private  fun PlantNamePreview() {
-    MaterialTheme {
-        PlantName("Apple")
+    val isDark = isSystemInDarkTheme()
+    MaterialTheme(
+        colorScheme = if (isDark) darkColorScheme() else lightColorScheme()
+    ) {
+        val plant = Plant("id", "Apple", "description", 3, 30, "")
+        PlantDetailContent(plant)
     }
 }
