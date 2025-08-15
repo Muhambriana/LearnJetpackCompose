@@ -54,10 +54,7 @@ fun PlantDetailDescription(
 
 @Composable
 fun PlantDetailContent(plant: Plant) {
-    val isDark = isSystemInDarkTheme()
-    MaterialTheme(
-        colorScheme = if (isDark) darkColorScheme() else lightColorScheme()
-    ) {
+    Surface {
         Column(Modifier.padding(dimensionResource(R.dimen.margin_normal))) {
             PlantName(plant.name)
             PlantWatering(plant.wateringInterval)
@@ -69,9 +66,7 @@ fun PlantDetailContent(plant: Plant) {
 private fun PlantName(name: String) {
     Text(
         text = name,
-        style = MaterialTheme.typography.headlineSmall.copy(
-            color = MaterialTheme.colorScheme.onBackground
-        ),
+        style = MaterialTheme.typography.headlineSmall,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = dimensionResource(R.dimen.margin_small))
@@ -79,19 +74,6 @@ private fun PlantName(name: String) {
     )
 }
 
-@Preview(showBackground = true)
-@Composable
-private  fun PlantNamePreview() {
-    val isDark = isSystemInDarkTheme()
-    MaterialTheme(
-        colorScheme = if (isDark) darkColorScheme() else lightColorScheme()
-    ) {
-        val plant = Plant("id", "Apple", "description", 3, 30, "")
-        PlantDetailContent(plant)
-    }
-}
-
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun PlantWatering(wateringInterval: Int) {
     Column(Modifier.fillMaxWidth()) {
@@ -118,10 +100,21 @@ private fun PlantWatering(wateringInterval: Int) {
     }
 }
 
-@Preview
+@Preview(showBackground = true)
+@Composable
+private  fun PlantDetailContentPreview() {
+    val plant = Plant("id", "Apple", "description", 3, 30, "")
+    PlantDetailContent(plant)
+}
+
+@Preview(showBackground = true)
+@Composable
+private  fun PlantNamePreview() {
+    PlantName("Orange")
+}
+
+@Preview(showBackground = true)
 @Composable
 private fun PlantWateringPreview() {
-    MaterialTheme {
-        PlantWatering(7)
-    }
+    PlantWatering(7)
 }
